@@ -1,0 +1,13 @@
+﻿{
+    "walking_protocol": {
+        "walking_distance": "10",
+        "overground": "1",
+    },
+    "motion_information": {
+        "Manufacturer": "cometa",
+    },
+    "other": {
+        "additional_comment": "1",
+        "comment_contents": "something something"
+    }
+}
