@@ -20,7 +20,7 @@ eeg.etc.dateTime % presumably the onset of the recording
 % consists of 10 channels IMU data placed on four body parts
 % sampling rate approx. 128 Hz 
 %--------------------------------------------------------------------------
-imu     = load(fullfile(sourceFolder, 'LSIE_04\LSIE_04_Indoor_imu.mat'));
+imu                     = load(fullfile(sourceFolder, 'LSIE_04\LSIE_04_Indoor_imu.mat'));
 imu.IMU.axisValue{1}'   % display channel types
 imu.IMU.axisValue{3}'   % display tracked body parts
 imu.IMU.samplingRate    % display sampling rate 
@@ -35,7 +35,7 @@ xml = readstruct(fullfile(sourceFolder, 'UM_LSIE.xml'));
 % 4. convert data to fiedtrip structs 
 %--------------------------------------------------------------------------
 EEGftData           = eeglab2fieldtrip(eeg, 'raw', 'none'); 
-MotionftData        = stream_to_ft(streams{MotionStreamInd}); 
+MotionftData        = struct_to_ft(imu.IMU); 
 
 % 4. enter generic metadata
 %--------------------------------------------------------------------------
