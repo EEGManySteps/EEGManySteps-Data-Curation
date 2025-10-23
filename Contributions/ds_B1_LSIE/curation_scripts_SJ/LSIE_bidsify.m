@@ -43,6 +43,7 @@ cfg                                         = [];
 cfg.bidsroot                                = bidsFolder;
 cfg.sub                                     = '004';
 cfg.task                                    = 'LSIE';
+cfg.ses                                     = 'Indoor'; 
 cfg.dataset_description.Name                = xml.title;
 cfg.dataset_description.BIDSVersion         = '1.10.1';
 cfg.InstitutionName                         = 'University of Michigan';
@@ -62,16 +63,15 @@ cfg.dataset_description.DatasetDOI          = 'n/a';
 
 % 5. enter eeg metadata and feed to data2bids function
 %--------------------------------------------------------------------------
-cfg.datatype = 'eeg';
-cfg.eeg.Manufacturer                = 'BioSemi';
+cfg.datatype                        = 'eeg'; % lower(xml.recordingParameterSets.recordingParameterSet(1).channelType.modality.type); : this causes issue because of ' and " difference
+cfg.eeg.Manufacturer                = xml.recordingParameterSets.recordingParameterSet(1).channelType.modality.name;
 cfg.eeg.ManufacturersModelName      = 'n/a';
-cfg.eeg.PowerLineFrequency          = 60; 
-cfg.eeg.EEGReference                = 'n/a'; 
+cfg.eeg.PowerLineFrequency          = 60; % GUESSED
+cfg.eeg.EEGReference                = xml.recordingParameterSets.recordingParameterSet(1).channelType.modality.referenceLabel; 
 cfg.eeg.SoftwareFilters             = 'n/a'; 
 
 % time synch information in scans.tsv file
-cfg.scans.acq_time  = eegAcqTime; 
-
+cfg.scans.acq_time                  = eeg.etc.dateTime; 
 data2bids(cfg, EEGftData);
 
 % 6. enter motion metadata and feed to dat2bids functino
