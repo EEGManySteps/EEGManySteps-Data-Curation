@@ -80,70 +80,48 @@ cfg.datatype    = 'motion';
 cfg             = rmfield(cfg, 'eeg'); 
 cfg.tracksys    = 'IMU';
 
-cfg.motion.TrackingSystemName          = 'IMU';
+cfg.motion.TrackingSystemName          = 'Opal'; % found in xml.recordingParameterSets.recordingParameterSet(7).channelType.modality.description
 cfg.motion.DeviceSerialNumber          = 'n/a';
 cfg.motion.SoftwareVersions            = 'n/a';
-cfg.motion.Manufacturer                = 'n/a';
-cfg.motion.ManufacturersModelName      = 'n/a';
+cfg.motion.Manufacturer                = xml.recordingParameterSets.recordingParameterSet(7).channelType.modality.name;
+cfg.motion.ManufacturersModelName      = 'Opal';
 
-% specify channel details, this overrides the details in the original data structure
-cfg.channels = [];
-cfg.channels.name = {
-  'HTCVive_posX'
-  'HTCVive_posY'
-  'HTCVive_posZ'
-  'HTCVive_quatX' 
-  'HTCVive_quatY'
-  'HTCVive_quatZ'
-  'HTCVive_quatW'
-  'HTCVive_ori'
-  };
-cfg.channels.component= {
-  'x'
-  'y'
-  'z'
-  'quat_x'
-  'quat_y'
-  'quat_z'
-  'quat_w'
-  'n/a'
-  };
-cfg.channels.type = {
-  'POS'
-  'POS'
-  'POS'
-  'ORI'
-  'ORI'
-  'ORI'
-  'ORI'
-  'MISC'
-  };
-cfg.channels.units = {
-  'm'
-  'm'
-  'm'
-  'n/a'
-  'n/a'
-  'n/a'
-  'n/a'
-  'n/a'
-  };
+% Initialize containers
+all_name = {};
+all_component = {};
+all_type = {};
+all_units = {};
+all_tracked_point = {};
 
-cfg.channels.tracked_point = {
-  'head'
-  'head'
-  'head'
-  'head'
-  'head'
-  'head'
-  'head'
-  'head'
-  };
+% Define per-sensor templates (constant across Pi)
+nameTemplate = imu.IMU.axisValue{1}(1:10);
+componentTemplate = {'x','y','z','x','y','z','x','y','z','n/a'};
+typeTemplate = {'ACCEL','ACCEL','ACCEL','GYRO','GYRO','GYRO','MAGN','MAGN','MAGN','MISC'};
+unitTemplate = {'m/s^2','m/s^2','m/s^2','rad/s','rad/s','rad/s','uT','uT','uT','oC'};
+
+% Loop through tracked points
+for Pi = 1:numel(imu.IMU.axisValue{3})
+    tracked         = imu.IMU.axisValue{3}{Pi};
+    chanName        = cellfun(@(n) sprintf('%s_%s', n, tracked), nameTemplate, 'UniformOutput', false);
+    all_name          = [all_name,          chanName];
+    all_component     = [all_component,     componentTemplate];
+    all_type          = [all_type,          typeTemplate];
+    all_units         = [all_units,         unitTemplate];
+    all_tracked_point = [all_tracked_point, repmat({tracked}, 1, numel(nameTemplate))];
+end
+
+% Collapse into a single FieldTrip-compatible struct
+cfg.channels = struct( ...
+    'name',          {all_name}, ...
+    'component',     {all_component}, ...
+    'type',          {all_type}, ...
+    'units',         {all_units}, ...
+    'tracked_point', {all_tracked_point} );
 
 % rename the channels in the data to match with channels.tsv
 MotionftData.label = cfg.channels.name;
 
 % time synch information in scans.tsv file
-cfg.scans.acq_time  = motionAcqTime; 
+cfg.scans.acq_time  = imu.IMU.dateTime ; 
 
 data2bids(cfg, MotionftData);
