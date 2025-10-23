@@ -57,7 +57,7 @@ expArray                                    = xml.experimenters(1).experimenter;
 names                                       = arrayfun(@(x) x.name, expArray, 'UniformOutput', false);
 cfg.dataset_description.Authors             = names;
 cfg.dataset_description.Acknowledgements    = 'n/a';
-cfg.dataset_description.Funding             = [xml.project.funding.organization, xml.project.funding.grantId];
+cfg.dataset_description.Funding             = strcat(xml.project.funding.organization, xml.project.funding.grantId);
 cfg.dataset_description.ReferencesAndLinks  = 'n/a';
 cfg.dataset_description.DatasetDOI          = 'n/a';
 
