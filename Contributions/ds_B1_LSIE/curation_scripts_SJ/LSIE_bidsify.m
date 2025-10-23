@@ -1,20 +1,26 @@
 % configure paths and tools
-dataFolder      = 'P:\Sein_Jeung\Project_ManySteps\Datasets\LSIE';
-fieldTripPath   = 'P:\Sein_Jeung\Project_BIDS\Workshops\Workshop_2024_NEC\public\Tools\fieldtrip-20240515'; 
-bidsFolder      = fullfile(dataFolder, 'BIDS-data');
-addpath(fieldTripPath); ft_defaults % add eeglab too if not already on path
+rootDir         = 'P:\Sein_Jeung\Project_ManySteps\Datasets\LSIE';
+sourceFolder    = fullfile(rootDir, 'source-data');
+bidsFolder      = fullfile(rootDir, 'BIDS-data');
+eeglabPath      = 'P:\Sein_Jeung\Tools\eeglab2025.1.0'; 
+fieldTripPath   = 'P:\Sein_Jeung\Tools\fieldtrip-20250501'; 
+
+% configure/initialize eeglab and fieldtrip  
+rmpath(fileparts(which('eeglab')))
+addpath(eeglabPath); eeglab
+addpath(fieldTripPath); ft_defaults 
 
 % 1. load and inspect EEG files
 % consists of 264 channels EEG data, sampling rate 512 Hz
 %--------------------------------------------------------------------------
-eeg     = pop_loadset(fullfile(dataFolder, 'LSIE_04\LSIE_04_Indoor.set')); 
+eeg     = pop_loadset(fullfile(sourceFolder, 'LSIE_04\LSIE_04_Indoor.set')); 
 eeg.etc.dateTime % presumably the onset of the recording
 
 % 2. load and inspect imu files 
 % consists of 10 channels IMU data placed on four body parts
 % sampling rate approx. 128 Hz 
 %--------------------------------------------------------------------------
-imu     = load(fullfile(dataFolder, 'LSIE_04\LSIE_04_Indoor_imu.mat'));
+imu     = load(fullfile(sourceFolder, 'LSIE_04\LSIE_04_Indoor_imu.mat'));
 imu.IMU.axisValue{1}'   % display channel types
 imu.IMU.axisValue{3}'   % display tracked body parts
 imu.IMU.samplingRate    % display sampling rate 
@@ -24,13 +30,12 @@ imu.IMU.dateTime        % presumably the onset of the recording
 % best read as a struct, contains information similar to dataset
 % description json in BIDS 
 %--------------------------------------------------------------------------
-xml = readstruct(fullfile(dataFolder, 'UM_LSIE.xml')); 
-
+xml = readstruct(fullfile(sourceFolder, 'UM_LSIE.xml')); 
 
 % 4. convert data to fiedtrip structs 
 %--------------------------------------------------------------------------
-%EEGftData           = stream_to_ft(streams{EEGStreamInd}); 
-%MotionftData        = stream_to_ft(streams{MotionStreamInd}); 
+EEGftData           = eeglab2fieldtrip(eeg, 'raw', 'none'); 
+MotionftData        = stream_to_ft(streams{MotionStreamInd}); 
 
 % 4. enter generic metadata
 %--------------------------------------------------------------------------
