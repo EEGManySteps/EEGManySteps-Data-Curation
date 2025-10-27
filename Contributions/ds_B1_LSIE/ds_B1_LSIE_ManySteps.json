@@ -1,0 +1,24 @@
+﻿{
+    "manysteps_provenance": {
+        "submission_type": "B",
+	"initial_submission": "n/a",
+        "curators": {"Geiger, Welzel, Jeung"} 
+    },
+
+    "gait_specification": {
+        "environment": "outdoor/indoor",
+        "walking_distance": "n/a",
+	"familiarisation_protocol" : "", 
+        "overground_or_treadmill": "both",
+	"pre-extracted": "no", 
+    },
+    "motion_hardware": {
+        "mocap_type": "IMU",
+        "mocap_type_other": "forceplate"
+    },
+    "time_synch_method": {
+        "recording_onsets": "yes",
+        "motion_time_stamps": "yes",
+        "event-based": "yes"
+    }
+}
