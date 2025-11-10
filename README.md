@@ -16,7 +16,7 @@ Overview of submitted data sets
 |-------------|-------------|-------------|----------------|----------------|--------------|
 | `ds_A1_TB` | `Tjeerd Boonstra` |`.` | `.` |`available upon request`|`curation in progress`|
 | `ds_B1_LSIE` |  `Grant Hanada/Daniel Ferris` |`.set` | `.mat` |[figshare](https://figshare.com/articles/dataset/LSIE_individual_subjects_full_set/6741734/2)|`curation in progress`|
-| `ds_B2_UK` | `Sodiq Fakorede/Hannes Devos` |`.` | `.` |`in preparation`|`curation in progress`|
+| `ds_B2_UK` | `Sodiq Fakorede/Hannes Devos` |`.xdf` | `.xdf` |`in preparation`|`curation in progress`|
 | `ds_B3_HIP` | `Anna Wunderlich/Klaus Gramann` |`.` | `.` |`in preparation`|`curation in progress`|
 
 Metadata guideline for contributors (WIP...)
