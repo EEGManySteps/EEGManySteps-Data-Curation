@@ -7,7 +7,6 @@ hdr.nSamplesPre         = 0;
 hdr.nSamples            = size(struct.dataArray,2);
 hdr.nTrials             = 1;
 hdr.FirstTimeStamp      = 0;
-%hdr.TimeStampPerSample  = (xdfStream.time_stamps(end)-xdfStream.time_stamps(1)) / (length(xdfStream.time_stamps) - 1);
 hdr.nChans              = size(struct.dataArray,1)*size(struct.dataArray,3);
 hdr.label               = cell(hdr.nChans, 1);
 hdr.chantype            = cell(hdr.nChans, 1);
@@ -24,7 +23,9 @@ for indP = 1:numel(struct.axisValue{3})
 end
 
 % keep the original header details
-ftData.trial    = {squeeze([struct.dataArray(:,:,1); struct.dataArray(:,:,2); struct.dataArray(:,:,3); struct.dataArray(:,:,4)])};
+data = struct.dataArray;
+[nChan, nTime, nTrials] = size(data);
+ftData.trial = {reshape(data, nChan*nTrials, nTime)};
 ftData.time     = {linspace(0,hdr.nSamples*1/hdr.Fs,hdr.nSamples)};
 ftData.hdr      = hdr;
 ftData.label    = hdr.label;
