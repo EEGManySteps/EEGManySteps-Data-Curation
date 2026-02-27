@@ -10,7 +10,8 @@ It will contain the following :
 4. Template and utility scripts for checking metadata integrity and conversion	
 
 
-Overview of submitted data sets
+## Overview of submitted data sets
+Requests for "available on request" or "controlled access" data sets are to be sent to eegmanysteps@gmail.com    
 
 | Dataset ID |  Contributor |Source EEG Format | Source Motion Format |Link to data set|Status|Notes|
 |-------------|-------------|-------------|----------------|----------------|--------------|--------------|
@@ -20,7 +21,7 @@ Overview of submitted data sets
 | `ds_B1_MK` | `Melanie Klapprott` |`.` | `.` |`in preparation`|`curation in progress`|'.'|
 | `ds_C1_LSIE` |  `Grant Hanada/Daniel Ferris` |`.set` | `.mat` |[figshare](https://figshare.com/articles/dataset/LSIE_individual_subjects_full_set/6741734/2)|`curation complete`|'treadmill + overground'|
 | `ds_C2_KUMC` | `Sodiq Fakorede/Hannes Devos` |`.xdf` | `.xdf` |`in preparation`|`curation in progress`|'clinical'|
-| `ds_C3_HIP` | `Anna Wunderlich/Klaus Gramann` |`xdf.` | `xdf.` |`restricted access`|`curation complete`|'aging/hearing impaired'|
+| `ds_C3_HIP` | `Anna Wunderlich/Klaus Gramann` |`xdf.` | `xdf.` |`controlled access`|``|'aging/hearing impaired'|
 | `ds_C4_TW` | `Nadine Jacobsen/Julius Welzel` |`.` | `.` |`in preparation`|`curation in progress`|'.'|
 
 Metadata guideline for contributors (WIP...)
