@@ -18,9 +18,9 @@ Overview of submitted data sets
 | `ds_A2_UK` | `Daniel Büchel` |`.` | `.` |`n/a`|`data collection in progress`|'.'|
 | `ds_A3_SJBP` | `Sein Jeung` |`.xdf` | `.xdf` |`n/a`|`data collection in progress`|'.'|
 | `ds_B1_MK` | `Melanie Klapprott` |`.` | `.` |`in preparation`|`curation in progress`|'.'|
-| `ds_C1_LSIE` |  `Grant Hanada/Daniel Ferris` |`.set` | `.mat` |[figshare](https://figshare.com/articles/dataset/LSIE_individual_subjects_full_set/6741734/2)|`curation in progress`|'treadmill + overground'|
+| `ds_C1_LSIE` |  `Grant Hanada/Daniel Ferris` |`.set` | `.mat` |[figshare](https://figshare.com/articles/dataset/LSIE_individual_subjects_full_set/6741734/2)|`curation complete`|'treadmill + overground'|
 | `ds_C2_KUMC` | `Sodiq Fakorede/Hannes Devos` |`.xdf` | `.xdf` |`in preparation`|`curation in progress`|'clinical'|
-| `ds_C3_HIP` | `Anna Wunderlich/Klaus Gramann` |`.` | `.` |`in preparation`|`curation in progress`|'aging/hearing impaired'|
+| `ds_C3_HIP` | `Anna Wunderlich/Klaus Gramann` |`xdf.` | `xdf.` |`restricted access`|`curation complete`|'aging/hearing impaired'|
 | `ds_C4_TW` | `Nadine Jacobsen/Julius Welzel` |`.` | `.` |`in preparation`|`curation in progress`|'.'|
 
 Metadata guideline for contributors (WIP...)
