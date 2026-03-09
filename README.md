@@ -34,39 +34,62 @@ Contributors are recommended to follow the terminology prescribed by the Brain I
 Following are the steps on how to check for metadata for your data set:
 
 ### Gait metadata
-If a system records motion from various parts on the body but is processed with the same device (e.g. Vicon), this device meta data is to be entered in the *_motion.json file.
-- "ManySteps_SpaceType" : "Indoor", "Outdoor"
-- "ManySteps_SurfaceType" : "Treadmill", "Overground"
-- "ManySteps_Shoes" : "on", "off"
+If a system records motion from various parts on the body but is processed with the same device (e.g. Vicon), this device meta data is to be entered in the *_motion.json and *_eeg.json file.    
+In addition to BIDS motion fields, these custom ManySteps fields **MUST** be present. 
+| Field | Allowed Values | Description |
+|------|------|------|
+| `ManySteps_SpaceType` | `"Indoor"`, `"Outdoor"` | Specifies whether the walking environment was indoors or outdoors. |
+| `ManySteps_SurfaceType` | `"Treadmill"`, `"Overground"` or user-defined | Type of walking surface. Custom values may be used if necessary. |
+| `ManySteps_Footwear` | `"On"`, `"Off"`, `"n/a"` | Indicates whether participants wore footwear during the task. |
+| `ManySteps_Gait_Description` | Free text | Additional comments about the gait protocol (e.g., instructions for turning, walking speed, experimental constraints). |
+| `ManySteps_Secondary_Task` | `"Yes"`, `"No"` | Indicates whether participants performed an additional task while walking. |
+
+If "ManySteps_SurfaceType" is set to "Treadmill", the following fields **MUST** be specified as well.    
+
+| Field | Allowed Values | Description |
+|------|------|------|
+| `ManySteps_Treadmill_Speed_Scheme` | `"Fixed"`, `"Individualized"` | Specifies whether the treadmill speed was fixed for all participants. |
+| `ManySteps_Treadmill_Speed` | Numerical value | Treadmill speed in m/s |
+
+If "ManySteps_SurfaceType" is set to "Overground", the following field **MUST** be specified as well.    
+| Field | Allowed Values | Description |
+|------|------|------|
+| `ManySteps_Overground_Distance` | Numerical value or  `"n/a"`| in meters in case the participant was walking back and forth on a straight line |
 
 ### Channels
 For each device all channels and their metadata should be specified in a separate channels.tsv file. Please check the BIDS specification how to do this.
 
-### Sensor placement
-BIDS-Motion currently does not restrict keywords for body parts for sensor placement. These keywords are entered into column ‘placement’ of ‘*_channels.tsv’ file. The coordinates are defined according to the human sensor placement system proposed in this document.
+#### Sensor placement
+BIDS-Motion currently does not restrict keywords for body parts for sensor placement. These keywords are entered into column ‘placement’ of ‘*_channels.tsv’ file. The body parts **MUST** use the vocabulary as defined in [this document](https://arxiv.org/abs/2412.21159). The coordinates are recommended to be provided.
 
-| Name |  Exemplar coordinates (X,Y,Z) |
+| placement |  placement_coords |
 |-------------|--------------------|
 | `Head` | 50,50,100 |
 | `LowerBack` | 50,50,100 |
 | `LeftFoot` | 50,70,30 |
 | `RightFoot` | 50,70,30 |
+...
 
 ### Pre-extracted gait events
-If the system you recorded data with do not provide raw time series data, gait events can be optionally shared in ‘*_events.tsv’ file accompanying EEG or motion data. 
+If the system you recorded data with do not provide raw time series data, gait events **MUST**be shared in ‘*_events.tsv’ file accompanying EEG or motion data. 
+You may add a custom-event for describing events that are not defined in the table below and provided description for it. 
+
 | Keyword |  Description |
 |-------------|--------------------|
-| `LHS` | left heel strike |
-| `RHS` | right heel strike |
+| `RIC` | right foot intial contact |
+| `RFC` | right foot final contact |
+| `LIC` | left foot intial contact |
+| `LFC` | left foot final contact |
 
 ### Time synchronisation between motion.tsv and EEG
 The type of time synchronisation method should be indicated in the dataset_description.json file, added as a cutom field as follows : 
 
-"ManySteps_Timesynch" : "regular_sampling", "latency_channel", "TTL"
+"ManySteps_Timesynch" : `"regular_sampling"`, `"latency_channel"`, `"hardware-trigger"`, `"software-trigger"`
 
 - regular_sampling : fixed, reliable smapling rate. Latency of each sample can be derived from sample index and SamplingFrequency    
 - latency_channel : per-sample lateancy provided as an additional channle in motion data (type = "latency")    
-- TTL : Hardware-based TTL trigger synchronization between systems        
+- hardware-trigger : Hardware-based TTL trigger synchronization between systems        
+- software-trigger : Software-based trigger synchronization between systems        
 
 Please use ‘acq’ column in the ‘*_scans.tsv’ file for aligning the onsets of different data streams if the recording starts at different times.   
 For instance, if the EEG recording started 1.2 sec earlier than the motion recording, this difference is expressed as the difference in the datetime value in "acq" column.    
