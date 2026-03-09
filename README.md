@@ -2,12 +2,10 @@
 Data curation repository for EEGManySteps
 --------------------------------------------------------------------------------------
 This repository contains helpful resources for curating data sets collected for EEGManySteps. 
-
-It will contain the following : 
-1. Guideline to curating your data for submitting to EEGManySteps
-2. Metadata from individual contributions, including link to the data repository as needed.
-3. Scripts for converting individual submissions to a standardized format (BIDS + custom metadata)
-4. Template and utility scripts for checking metadata integrity and conversion	
+1. Metadata from individual contributions, including link to the data repository if available.
+2. Guideline to curating your data for submitting to EEGManySteps
+3. Scripts for converting individual submissions to a standardized format (BIDS + custom metadata). 
+4. Template and utility scripts for checking metadata integrity and conversion (WIP)	
 
 
 ## Overview of submitted data sets
@@ -29,9 +27,9 @@ Access requests for "available on request" or "controlled access" data sets are 
 
 Metadata guideline for contributors 
 --------------------------------------------------------------------------------------
-Contributors are recommended to follow the terminology prescribed by the Brain Imaging Data Structure ([BIDS](https://bids.neuroimaging.io/index.html)), especially [EEG-BIDS](https://bids-specification.readthedocs.io/en/stable/modality-specific-files/electroencephalography.html) and [Motion-BIDS](https://bids-specification.readthedocs.io/en/stable/modality-specific-files/motion.html). Importantly, the metadata for each channel should contain information specified for the ‘_channels.tsv’ file. We provide template ManySteps metadata files and a validator script to help you check the integrity of your data set for joint analysis of EEG and gait. 
+Contributors are asked to convert the data set to a standardized format, following the terminology prescribed by the Brain Imaging Data Structure ([BIDS](https://bids.neuroimaging.io/index.html)), especially [EEG-BIDS](https://bids-specification.readthedocs.io/en/stable/modality-specific-files/electroencephalography.html) and [Motion-BIDS](https://bids-specification.readthedocs.io/en/stable/modality-specific-files/motion.html). 
 
-Following are the steps on how to check for metadata for your data set:
+Additionally, we EEGManySteps define custom metadata fields that are **required ("MUST")** or **recommended** for interpretation of gait-EEG data.
 
 ### Gait metadata
 In addition to BIDS motion fields, these custom ManySteps fields **MUST** be present in the *_motion.json and *_eeg.json file. 
@@ -55,10 +53,7 @@ If "ManySteps_SurfaceType" is set to "Overground", the following field **MUST** 
 |------|------|------|
 | `ManySteps_Overground_Distance` | Numerical value or  `"n/a"`| in meters in case the participant was walking back and forth on a straight line |
 
-### Channels
-For each device all channels and their metadata should be specified in a separate channels.tsv file. Please check the BIDS specification how to do this.
-
-#### Sensor placement
+### Sensor placement
 BIDS-Motion currently does not restrict keywords for body parts for sensor placement. These keywords are entered into column ‘placement’ of ‘*_channels.tsv’ file. The body parts **MUST** use the vocabulary as defined in [this document](https://arxiv.org/abs/2412.21159). The coordinates are recommended to be provided.
 
 | placement |  placement_coords |
@@ -70,7 +65,7 @@ BIDS-Motion currently does not restrict keywords for body parts for sensor place
 ...
 
 ### Pre-extracted gait events
-If the system you recorded data with do not provide raw time series data, gait events **MUST**be shared in ‘*_events.tsv’ file accompanying EEG or motion data. 
+If the system you recorded data with do not provide raw time series data, gait events **MUST** be shared in ‘*_events.tsv’ file accompanying EEG or motion data. 
 You may add a custom-event for describing events that are not defined in the table below and provided description for it. 
 
 | Keyword |  Description |
