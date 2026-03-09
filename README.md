@@ -34,8 +34,7 @@ Contributors are recommended to follow the terminology prescribed by the Brain I
 Following are the steps on how to check for metadata for your data set:
 
 ### Gait metadata
-If a system records motion from various parts on the body but is processed with the same device (e.g. Vicon), this device meta data is to be entered in the *_motion.json and *_eeg.json file.    
-In addition to BIDS motion fields, these custom ManySteps fields **MUST** be present. 
+In addition to BIDS motion fields, these custom ManySteps fields **MUST** be present in the *_motion.json and *_eeg.json file. 
 | Field | Allowed Values | Description |
 |------|------|------|
 | `ManySteps_SpaceType` | `"Indoor"`, `"Outdoor"` | Specifies whether the walking environment was indoors or outdoors. |
