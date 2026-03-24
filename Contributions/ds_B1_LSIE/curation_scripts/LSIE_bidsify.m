@@ -1,7 +1,7 @@
 % configure paths and tools
-rootDir         = 'P:\Sein_Jeung\Project_ManySteps\Datasets\LSIE';
+rootDir         = '\\bpn-data\sein\ManySteps\ds_C1_LSIE';
 sourceFolder    = fullfile(rootDir, 'source-data');
-bidsFolder      = fullfile(rootDir, 'BIDS-data');
+bidsFolder      = fullfile('P:\Sein_Jeung\Project_ManySteps\Datasets\LSIE\BIDS-data');
 eeglabPath      = 'P:\Sein_Jeung\Tools\eeglab2025.1.0'; 
 fieldTripPath   = 'P:\Sein_Jeung\Tools\fieldtrip-20250501'; 
 
@@ -10,28 +10,29 @@ rmpath(fileparts(which('eeglab')))
 addpath(eeglabPath); eeglab
 addpath(fieldTripPath); ft_defaults
 
-
 % participant IDs
-IDs = {'04', '25'};
+IDs = {'04', '25', '16', '40'};
+% '41', '42', '43', '44', '45', '47', '48', '13', '14',...
+%        '15', '16', '17', '18', '19', '20', '21', '22', '12'};
 
 % sessions
 sessions = {'Indoor', 'Outdoor'};
 
 
-for ID = IDs
-    for session = sessions
+for ID = 1:numel(IDs)
+    for session = 1:numel(sessions)
         
         % 1. load and inspect EEG files
         % consists of 264 channels EEG data, sampling rate 512 Hz
         %--------------------------------------------------------------------------
-        eeg     = pop_loadset(fullfile(sourceFolder, ['LSIE_' ID{1} '\LSIE_' ID{1} '_' session{1} '.set']));
+        eeg     = pop_loadset(fullfile(sourceFolder, ['LSIE_' IDs{ID} '\LSIE_' IDs{ID} '_' sessions{session} '.set']));
         eeg.etc.dateTime % presumably the onset of the recording
-        
+        3
         % 2. load and inspect imu files
         % consists of 10 channels IMU data placed on four body parts
         % sampling rate approx. 128 Hz
         %--------------------------------------------------------------------------
-        imu                     = load(fullfile(sourceFolder, ['LSIE_' ID{1} '\LSIE_' ID{1} '_' session{1} '_imu.mat']));
+        imu      = load(fullfile(sourceFolder, ['LSIE_' IDs{ID} '\LSIE_' IDs{ID} '_' sessions{session} '_imu.mat']));
         imu.IMU.axisValue{1}'   % display channel types
         imu.IMU.axisValue{3}'   % display tracked body parts
         imu.IMU.samplingRate    % display sampling rate
@@ -52,16 +53,16 @@ for ID = IDs
         %--------------------------------------------------------------------------
         cfg                                         = [];
         cfg.bidsroot                                = bidsFolder;
-        cfg.sub                                     = ID{1};
+        cfg.sub                                     = IDs{ID};
         cfg.task                                    = 'LSIE';
-        cfg.ses                                     = session{1};
+        cfg.ses                                     = sessions{session};
         cfg.dataset_description.Name                = xml.title;
         cfg.dataset_description.BIDSVersion         = '1.10.1';
         cfg.InstitutionName                         = 'University of Michigan';
         cfg.InstitutionalDepartmentName             = xml.organization.name;
         cfg.InstitutionAddress                      = 'n/a';
         cfg.TaskDescription                         = xml.description;
-        
+
         % optional for dataset_description.json
         cfg.dataset_description.License             = 'CC BY 4.0';
         expArray                                    = xml.experimenters(1).experimenter;
@@ -71,7 +72,24 @@ for ID = IDs
         cfg.dataset_description.Funding             = strcat(xml.project.funding.organization, xml.project.funding.grantId);
         cfg.dataset_description.ReferencesAndLinks  = 'n/a';
         cfg.dataset_description.DatasetDOI          = 'n/a';
-        
+
+        % process events
+        fs = eeg.srate;
+        nEvents = numel(eeg.event);
+
+        onset = zeros(nEvents,1);
+        duration = zeros(nEvents,1);
+        trial_type = cell(nEvents,1);   % <- cell array, not string
+
+        for i = 1:nEvents
+            onset(i) = (eeg.event(i).latency - 1) / fs;
+            duration(i) = 0;  % or eeg.event(i).duration/fs if you have it
+            trial_type{i} = char(eeg.event(i).type);   % <- convert type to char
+        end
+
+        cfg.events = table(onset, duration, trial_type);
+
+
         % 5. enter eeg metadata and feed to data2bids function
         %--------------------------------------------------------------------------
         cfg.datatype                        = 'eeg'; % lower(xml.recordingParameterSets.recordingParameterSet(1).channelType.modality.type); : this causes issue because of ' and " difference
@@ -80,23 +98,34 @@ for ID = IDs
         cfg.eeg.PowerLineFrequency          = 60; % GUESSED
         cfg.eeg.EEGReference                = xml.recordingParameterSets.recordingParameterSet(1).channelType.modality.referenceLabel;
         cfg.eeg.SoftwareFilters             = 'n/a';
-        
+        cfg.coordsystem.EEGCoordinateSystem      = 'CTF'; % GUESSED
+        cfg.coordsystem.EEGCoordinateUnits       = 'mm';
+
         % time synch information in scans.tsv file
         cfg.scans.acq_time                  = eeg.etc.dateTime;
-        data2bids(cfg, EEGftData);
+       % data2bids(cfg, EEGftData);
         
         % 6. enter motion metadata and feed to dat2bids functino
         %--------------------------------------------------------------------------
-        cfg.datatype    = 'motion';
-        cfg             = rmfield(cfg, 'eeg');
-        cfg.tracksys    = 'IMU';
+        cfg.datatype                            = 'motion';
+        cfg                                     = rmfield(cfg, 'eeg');
+        cfg.tracksys                            = 'IMU';
         
-        cfg.motion.TrackingSystemName          = 'Opal'; % found in xml.recordingParameterSets.recordingParameterSet(7).channelType.modality.description
-        cfg.motion.DeviceSerialNumber          = 'n/a';
-        cfg.motion.SoftwareVersions            = 'n/a';
-        cfg.motion.Manufacturer                = xml.recordingParameterSets.recordingParameterSet(7).channelType.modality.name;
-        cfg.motion.ManufacturersModelName      = 'Opal';
-        
+        cfg.motion.TrackingSystemName           = 'Opal'; % found in xml.recordingParameterSets.recordingParameterSet(7).channelType.modality.description
+        cfg.motion.DeviceSerialNumber           = 'n/a';
+        cfg.motion.SoftwareVersions             = 'n/a';
+        cfg.motion.Manufacturer                 = xml.recordingParameterSets.recordingParameterSet(7).channelType.modality.name;
+        cfg.motion.ManufacturersModelName       = 'Opal';
+        cfg.motion.ManySteps_SpaceType          = sessions{session};
+
+        if session == 1
+            cfg.motion.ManySteps_SurfaceType    = 'Treadmill';
+        else
+            cfg.motion.ManySteps_SurfaceType    = 'Overground';
+        end
+
+        cfg.motion.ManySteps_Footware           = 'n/a';
+
         % Initialize containers
         all_name = {};
         all_component = {};
