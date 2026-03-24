@@ -3,7 +3,19 @@
 function [ftdata] = stream2ft(xdfstream)
 
 % construct header
-hdr.Fs                  = xdfstream.info.effective_srate;
+if isfield(xdfstream.info, 'effective_srate')
+    hdr.Fs                  = xdfstream.info.effective_srate;
+else
+    hdr.Fs                  = xdfstream.info.nominal_srate;
+end
+
+if ~strcmp(xdfstream.info.type, 'EEG') % if effective srate is missing and type is non-EEG, add Latency channel
+    xdfstream.time_series(end+1,:) = xdfstream.time_stamps - xdfstream.time_stamps(1); 
+    xdfstream.info.desc.channels.channel{end+1}.label = 'latency';
+    xdfstream.info.desc.channels.channel{end}.type = 'latency'; 
+    xdfstream.info.desc.channel_count = numel(xdfstream.info.desc.channels.channel); 
+end
+
 hdr.nFs                 = str2double(xdfstream.info.nominal_srate);
 hdr.nSamplesPre         = 0;
 hdr.nSamples            = length(xdfstream.time_stamps);
