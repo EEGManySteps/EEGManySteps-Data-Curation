@@ -17,8 +17,9 @@ Access requests for "available on request" or "controlled access" data sets are 
 | Dataset ID |  Contributor |Source EEG Format | Source Motion Format |Link to data set|Status|Notes|
 |-------------|-------------|-------------|----------------|----------------|--------------|--------------|
 | `ds_A1_TB` | Tjeerd Boonstra |`.` | . |available upon request|curation in progress|treadmill|
-| `ds_A2_UK` | Daniel Büchel |`.` | `.` |n/a|data collection in progress|.|
-| `ds_A3_SJBP` | Sein Jeung |`.xdf` | `.xdf` |n/a|data collection in progress|overground|
+| `ds_A2_UK` | Daniel Büchel |`.` | `.` |n/a|controlled access|.|
+| `ds_A3_SJBP` | Sein Jeung |`.xdf` | `.xdf` |n/a|controlled access|overground|
+| `ds_A4_PSANT` | Pema Sherpa |`.xdf` | `.xdf` |n/a|controlled access|overground|
 | `ds_B1_MK` | Melanie Klapprott |`.` | `.` |in preparation|curation in progress|.|
 | `ds_C1_LSIE` |  Grant Hanada/Daniel Ferris |`.set` | `.mat` |[figshare](https://figshare.com/articles/dataset/LSIE_individual_subjects_full_set/6741734/2)|curation complete|treadmill + overground, curated set available upon request|
 | `ds_C2_KUMC` | Sodiq Fakorede/Hannes Devos |`.xdf` | `.xdf` |in preparation|curation in progress|clinical|
